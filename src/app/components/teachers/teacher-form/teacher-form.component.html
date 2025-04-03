@@ -1,0 +1,118 @@
+<form [formGroup]="teacherForm" (ngSubmit)="onSubmit()" class="teacher-form">
+  <div class="form-section">
+    <h3>基本信息</h3>
+    
+    <div class="form-group">
+      <label for="name">姓名 *</label>
+      <input id="name" type="text" formControlName="name">
+      <div class="error" *ngIf="teacherForm.get('name')?.errors?.['required'] && teacherForm.get('name')?.touched">
+        姓名是必填项
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="age">年龄 *</label>
+      <input id="age" type="number" formControlName="age">
+      <div class="error" *ngIf="teacherForm.get('age')?.errors?.['required'] && teacherForm.get('age')?.touched">
+        年龄是必填项
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="gender">性别 *</label>
+      <select id="gender" formControlName="gender">
+        <option value="male">男</option>
+        <option value="female">女</option>
+        <option value="other">其他</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="phone">电话 *</label>
+      <input id="phone" type="tel" formControlName="phone">
+      <div class="error" *ngIf="teacherForm.get('phone')?.errors?.['required'] && teacherForm.get('phone')?.touched">
+        电话是必填项
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email">邮箱</label>
+      <input id="email" type="email" formControlName="email">
+      <div class="error" *ngIf="teacherForm.get('email')?.errors?.['email'] && teacherForm.get('email')?.touched">
+        请输入有效的邮箱地址
+      </div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <h3>教学信息</h3>
+    
+    <div class="form-group">
+      <label for="subject">教授科目 *</label>
+      <select id="subject" multiple formControlName="subject">
+        <option value="语文">语文</option>
+        <option value="数学">数学</option>
+        <option value="英语">英语</option>
+        <option value="物理">物理</option>
+        <option value="化学">化学</option>
+        <option value="生物">生物</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="education">学历</label>
+      <select id="education" formControlName="education">
+        <option value="本科">本科</option>
+        <option value="硕士">硕士</option>
+        <option value="博士">博士</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="title">职称</label>
+      <select id="title" formControlName="title">
+        <option value="助教">助教</option>
+        <option value="讲师">讲师</option>
+        <option value="副教授">副教授</option>
+        <option value="教授">教授</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <h3>其他信息</h3>
+    
+    <div class="form-group">
+      <label for="idNumber">身份证号 *</label>
+      <input id="idNumber" type="text" formControlName="idNumber">
+    </div>
+
+    <div class="form-group">
+      <label for="address">地址</label>
+      <textarea id="address" formControlName="address"></textarea>
+    </div>
+
+    <div class="form-group">
+      <h4>紧急联系人</h4>
+      <div formGroupName="emergencyContact">
+        <div class="form-group">
+          <label for="emergencyName">姓名 *</label>
+          <input id="emergencyName" type="text" formControlName="name">
+        </div>
+        <div class="form-group">
+          <label for="emergencyPhone">电话 *</label>
+          <input id="emergencyPhone" type="tel" formControlName="phone">
+        </div>
+        <div class="form-group">
+          <label for="relationship">关系 *</label>
+          <input id="relationship" type="text" formControlName="relationship">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" [disabled]="!teacherForm.valid">保存</button>
+    <button type="button" (click)="onCancel()">取消</button>
+  </div>
+</form> 

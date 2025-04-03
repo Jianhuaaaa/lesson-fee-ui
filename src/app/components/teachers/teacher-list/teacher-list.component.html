@@ -1,0 +1,132 @@
+<div class="teacher-list-container">
+  <div class="header">
+    <h2>教师列表</h2>
+    <div class="header-actions">
+      <div class="action-buttons">
+        <div class="search-box">
+          <input type="text" [(ngModel)]="searchQuery" placeholder="搜索教师..." (keyup.enter)="onSearch()">
+          <button class="search-btn" (click)="onSearch()">搜索</button>
+          <button class="add-button" (click)="startAdd()">
+            添加教师
+          </button>
+        </div>
+        <div class="column-chooser">
+          <button (click)="toggleColumnChooser()">选择显示字段</button>
+          <div class="column-list" *ngIf="showColumnChooser">
+            <div *ngFor="let column of columns" class="column-item">
+              <label>
+                <input type="checkbox" [checked]="column.visible" (change)="toggleColumn(column)">
+                {{ column.header }}
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="error-message" *ngIf="error">
+    {{ error }}
+  </div>
+
+  <div class="loading" *ngIf="loading">
+    加载中...
+  </div>
+
+  <div class="table-section" *ngIf="!loading">
+    <div class="teacher-table">
+      <table>
+        <thead>
+          <tr>
+            <th *ngFor="let column of columns" [class.hidden]="!column.visible">
+              {{ column.header }}
+            </th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- 添加新教师的行 -->
+          <tr *ngIf="isAdding" [formGroup]="teacherForm">
+            <td *ngFor="let column of columns" [class.hidden]="!column.visible">
+              <ng-container [ngSwitch]="column.type">
+                <input *ngSwitchCase="'text'" [type]="column.field === 'email' ? 'email' : 'text'"
+                  [formControlName]="column.field">
+                <input *ngSwitchCase="'number'" type="number" [formControlName]="column.field">
+                <select *ngSwitchCase="'select'" [formControlName]="column.field">
+                  <option *ngFor="let option of column.options" [value]="option.value">
+                    {{ option.label }}
+                  </option>
+                </select>
+                <input *ngSwitchCase="'date'" type="date" [formControlName]="column.field">
+              </ng-container>
+            </td>
+            <td>
+              <button class="save-btn" (click)="saveEdit()" [disabled]="!teacherForm.valid">保存</button>
+              <button class="cancel-btn" (click)="cancelEdit()">取消</button>
+            </td>
+          </tr>
+
+          <!-- 教师列表行 -->
+          <tr *ngFor="let teacher of teachers" [formGroup]="teacherForm">
+            <td *ngFor="let column of columns" [class.hidden]="!column.visible">
+              <ng-container *ngIf="!isEditing(teacher)">
+                <ng-container [ngSwitch]="column.type">
+                  <span *ngSwitchCase="'text'">{{ getFieldValue(teacher, column.field) }}</span>
+                  <span *ngSwitchCase="'number'">{{ getFieldValue(teacher, column.field) }}</span>
+                  <span *ngSwitchCase="'select'">
+                    {{ getOptionLabel(column, getFieldValue(teacher, column.field)) }}
+                  </span>
+                  <span *ngSwitchCase="'date'">
+                    {{ getFieldValue(teacher, column.field) | date:'yyyy-MM-dd' }}
+                  </span>
+                  <span *ngSwitchCase="'group'">
+                    {{ getFieldValue(teacher, column.field) }}
+                  </span>
+                </ng-container>
+              </ng-container>
+              <ng-container *ngIf="isEditing(teacher)">
+                <ng-container [ngSwitch]="column.type">
+                  <input *ngSwitchCase="'text'" [type]="column.field === 'email' ? 'email' : 'text'"
+                    [formControlName]="column.field">
+                  <input *ngSwitchCase="'number'" type="number" [formControlName]="column.field">
+                  <select *ngSwitchCase="'select'" [formControlName]="column.field">
+                    <option *ngFor="let option of column.options" [value]="option.value">
+                      {{ option.label }}
+                    </option>
+                  </select>
+                  <input *ngSwitchCase="'date'" type="date" [formControlName]="column.field">
+                  <div *ngSwitchCase="'group'" class="emergency-contact">
+                    <input type="text" formControlName="emergencyContact.name" placeholder="联系人姓名">
+                    <input type="tel" formControlName="emergencyContact.phone" placeholder="联系人电话">
+                    <input type="text" formControlName="emergencyContact.relationship" placeholder="关系">
+                  </div>
+                </ng-container>
+              </ng-container>
+            </td>
+            <td>
+              <ng-container *ngIf="!isEditing(teacher)">
+                <button class="edit-btn" (click)="startEdit(teacher)">编辑</button>
+                <button class="delete-btn" (click)="confirmDelete(teacher)">删除</button>
+              </ng-container>
+              <ng-container *ngIf="isEditing(teacher)">
+                <button class="save-btn" (click)="saveEdit()" [disabled]="!teacherForm.valid">保存</button>
+                <button class="cancel-btn" (click)="cancelEdit()">取消</button>
+              </ng-container>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="no-data" *ngIf="!loading && teachers.length === 0">
+    暂无教师数据
+  </div>
+
+  <!-- <div class="floating-add-button">
+    <button class="add-button" (click)="startAdd()">
+      <i class="fas fa-plus"></i>
+      添加教师
+    </button>
+  </div> -->
+</div>
