@@ -12,9 +12,4 @@ export interface Teacher {
   status: 'active' | 'inactive';
   idNumber: string;        // 身份证号
   address: string;         // 地址
-  emergencyContact: {      // 紧急联系人
-    name: string;
-    phone: string;
-    relationship: string;
-  };
 } 

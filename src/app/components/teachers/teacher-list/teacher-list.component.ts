@@ -5,7 +5,7 @@ import { Teacher } from '../../../models/teacher.interface';
 import { TeacherService } from '../../../services/teacher.service';
 
 interface Column {
-  field: keyof Teacher | 'emergencyContact.name' | 'emergencyContact.phone' | 'emergencyContact.relationship';
+  field: keyof Teacher 
   header: string;
   visible: boolean;
   type: 'text' | 'number' | 'select' | 'date' | 'group';
@@ -71,10 +71,7 @@ export class TeacherListComponent implements OnInit {
     },
     { field: 'email', header: '邮箱', visible: false, type: 'text' },
     { field: 'idNumber', header: '身份证号', visible: false, type: 'text' },
-    { field: 'address', header: '地址', visible: false, type: 'text' },
-    { field: 'emergencyContact.name', header: '紧急联系人', visible: false, type: 'group' },
-    { field: 'emergencyContact.phone', header: '紧急联系人电话', visible: false, type: 'text' },
-    { field: 'emergencyContact.relationship', header: '紧急联系人关系', visible: false, type: 'text' }
+    { field: 'address', header: '地址', visible: false, type: 'text' }
   ];
 
   constructor(
@@ -93,12 +90,7 @@ export class TeacherListComponent implements OnInit {
       joinDate: ['', [Validators.required]],
       status: ['active', [Validators.required]],
       idNumber: ['', [Validators.pattern(/^\d{17}[\dXx]$/)]],
-      address: [''],
-      emergencyContact: this.fb.group({
-        name: [''],
-        phone: ['', [Validators.pattern(/^1[3-9]\d{9}$/)]],
-        relationship: ['']
-      })
+      address: ['']
     });
   }
 
@@ -145,12 +137,7 @@ export class TeacherListComponent implements OnInit {
       joinDate: teacher.joinDate.toISOString().split('T')[0],
       status: teacher.status,
       idNumber: teacher.idNumber,
-      address: teacher.address,
-      emergencyContact: {
-        name: teacher.emergencyContact.name,
-        phone: teacher.emergencyContact.phone,
-        relationship: teacher.emergencyContact.relationship
-      }
+      address: teacher.address
     });
   }
 
@@ -184,8 +171,7 @@ export class TeacherListComponent implements OnInit {
         joinDate: new Date(formValue.joinDate),
         status: formValue.status,
         idNumber: formValue.idNumber,
-        address: formValue.address,
-        emergencyContact: formValue.emergencyContact
+        address: formValue.address
       };
 
       const operation = this.editingTeacher ?

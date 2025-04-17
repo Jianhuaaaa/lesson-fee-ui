@@ -12,7 +12,7 @@ import { Teacher } from '../../../models/teacher.interface';
 })
 export class TeacherFormComponent implements OnInit {
   @Input() teacher?: Teacher;
-  @Output() save = new EventEmitter<Teacher>();
+  @Output() save = new EventEmitter<Partial<Teacher>>();
   @Output() cancel = new EventEmitter<void>();
 
   teacherForm: FormGroup;
@@ -24,21 +24,14 @@ export class TeacherFormComponent implements OnInit {
     this.teacherForm = this.fb.group({
       name: ['', [Validators.required]],
       age: ['', [Validators.required, Validators.min(18), Validators.max(70)]],
-      gender: ['', [Validators.required]],
+      gender: ['male', Validators.required],
       phone: ['', [Validators.required, Validators.pattern(/^1[3-9]\d{9}$/)]],
-      email: ['', [Validators.required, Validators.email]],
-      subject: ['', [Validators.required]],
-      education: ['', [Validators.required]],
-      title: ['', [Validators.required]],
-      joinDate: ['', [Validators.required]],
-      status: ['active', [Validators.required]],
-      idNumber: ['', [Validators.required, Validators.pattern(/^\d{17}[\dXx]$/)]],
-      address: ['', [Validators.required]],
-      emergencyContact: this.fb.group({
-        name: ['', [Validators.required]],
-        phone: ['', [Validators.required, Validators.pattern(/^1[3-9]\d{9}$/)]],
-        relationship: ['', [Validators.required]]
-      })
+      email: ['', [Validators.email]],
+      subject: [[], [Validators.required, Validators.minLength(1)]],
+      education: ['本科'],
+      title: ['讲师'],
+      idNumber: ['', [Validators.required, Validators.pattern(/^\d{17}[\dX]$/)]],
+      address: ['']
     });
   }
 
@@ -54,10 +47,10 @@ export class TeacherFormComponent implements OnInit {
       const formValue = this.teacherForm.value;
       
       // 处理科目数组
-      const subjects = formValue.subject.split(',').map((s: string) => s.trim());
+      const subjects = formValue.subject.map((s: string) => s.trim());
       
       // 创建完整的教师对象
-      const teacherData: Teacher = {
+      const teacherData: Partial<Teacher> = {
         id: this.teacher?.id || 0, // 如果是编辑模式使用现有ID，否则使用0
         name: formValue.name,
         age: formValue.age,
@@ -70,8 +63,7 @@ export class TeacherFormComponent implements OnInit {
         joinDate: new Date(formValue.joinDate),
         status: formValue.status,
         idNumber: formValue.idNumber,
-        address: formValue.address,
-        emergencyContact: formValue.emergencyContact
+        address: formValue.address
       };
 
       this.save.emit(teacherData);

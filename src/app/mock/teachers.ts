@@ -14,12 +14,7 @@ export const mockTeachers: Teacher[] = [
     joinDate: new Date('2020-09-01'),
     status: 'active',
     idNumber: '110101199001011234',
-    address: '北京市朝阳区',
-    emergencyContact: {
-      name: '李四',
-      phone: '13900139000',
-      relationship: '配偶'
-    }
+    address: '北京市朝阳区'
   },
   {
     id: 2,
@@ -34,12 +29,7 @@ export const mockTeachers: Teacher[] = [
     joinDate: new Date('2021-09-01'),
     status: 'active',
     idNumber: '110101199001011235',
-    address: '北京市海淀区',
-    emergencyContact: {
-      name: '王五',
-      phone: '13900139001',
-      relationship: '配偶'
-    }
+    address: '北京市海淀区'
   },
   {
     id: 3,
@@ -54,11 +44,6 @@ export const mockTeachers: Teacher[] = [
     joinDate: new Date('2015-09-01'),
     status: 'active',
     idNumber: '110101199001011236',
-    address: '北京市西城区',
-    emergencyContact: {
-      name: '赵六',
-      phone: '13900139002',
-      relationship: '配偶'
-    }
+    address: '北京市西城区'
   }
 ]; 
