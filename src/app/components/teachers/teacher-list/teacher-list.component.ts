@@ -124,7 +124,6 @@ export class TeacherListComponent implements OnInit {
   startEdit(teacher: Teacher) {
     this.isAdding = false;
     this.editingTeacher = teacher;
-    this.teacherForm.reset();
     this.teacherForm.patchValue({
       name: teacher.name,
       age: teacher.age,
@@ -134,7 +133,7 @@ export class TeacherListComponent implements OnInit {
       subject: teacher.subject.join(', '),
       education: teacher.education,
       title: teacher.title,
-      joinDate: teacher.joinDate.toISOString().split('T')[0],
+      joinDate: teacher.joinDate,
       status: teacher.status,
       idNumber: teacher.idNumber,
       address: teacher.address
@@ -196,11 +195,9 @@ export class TeacherListComponent implements OnInit {
   confirmDelete(teacher: Teacher) {
     if (confirm(`确定要删除教师 ${teacher.name} 吗？`)) {
       this.loading = true;
-      this.teacherService.deleteTeacher(teacher.id).subscribe({
-        next: (success) => {
-          if (success) {
+      this.teacherService.deleteTeacher(teacher.id.toString()).subscribe({
+        next: (success) => {         
             this.loadTeachers();
-          }
           this.loading = false;
         },
         error: (error) => {

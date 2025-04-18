@@ -1,57 +1,37 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { Teacher } from '../models/teacher.interface';
-import { mockTeachers } from '../mock/teachers';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TeacherService {
-  private teachers: Teacher[] = [...mockTeachers];
+  private apiUrl = 'http://localhost:8080/api/teachers'; // 后端 API 地址
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   getTeachers(): Observable<Teacher[]> {
-    return of(this.teachers);
+    return this.http.get<Teacher[]>(this.apiUrl);
   }
 
-  getTeacher(id: number): Observable<Teacher | undefined> {
-    return of(this.teachers.find(teacher => teacher.id === id));
+  getTeacher(id: string): Observable<Teacher> {
+    return this.http.get<Teacher>(`${this.apiUrl}/${id}`);
   }
 
   createTeacher(teacher: Omit<Teacher, 'id'>): Observable<Teacher> {
-    const newTeacher: Teacher = {
-      ...teacher,
-      id: this.teachers.length + 1
-    };
-    this.teachers.push(newTeacher);
-    return of(newTeacher);
+    return this.http.post<Teacher>(this.apiUrl, teacher);
   }
 
   updateTeacher(teacher: Teacher): Observable<Teacher> {
-    const index = this.teachers.findIndex(t => t.id === teacher.id);
-    if (index !== -1) {
-      this.teachers[index] = teacher;
-      return of(teacher);
-    }
-    throw new Error('Teacher not found');
+    return this.http.put<Teacher>(`${this.apiUrl}/${teacher.id}`, teacher);
   }
 
-  deleteTeacher(id: number): Observable<boolean> {
-    const index = this.teachers.findIndex(teacher => teacher.id === id);
-    if (index !== -1) {
-      this.teachers.splice(index, 1);
-      return of(true);
-    }
-    return of(false);
+  deleteTeacher(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
   searchTeachers(query: string): Observable<Teacher[]> {
-    const searchQuery = query.toLowerCase();
-    return of(this.teachers.filter(teacher => 
-      teacher.name.toLowerCase().includes(searchQuery) ||
-      teacher.email.toLowerCase().includes(searchQuery) ||
-      teacher.phone.includes(searchQuery)
-    ));
+    return this.http.get<Teacher[]>(`${this.apiUrl}/search?query=${query}`);
   }
 } 
